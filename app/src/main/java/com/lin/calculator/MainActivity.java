@@ -4,9 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewDebug;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -65,7 +67,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String s=et.getText().toString();
-                if(s.contains(".")){
+                String[] sa=s.split("\\+|-|\\*|/");//将算数表达式按照+，-，*，/分割，用来判断当前输入的数（即分割出来的数组最后一个元素）是否已经输入小数点.
+                /*for(int i=0,len=sa.length;i<len;i++){
+                    Log.i("tag:the array is:",sa[i]);
+                }*/
+                if(sa[sa.length-1].contains(".")){
 
                 }else{
                     if(s.equals("/")||s.equals("*")||s.equals("+")||s.equals("-")){
@@ -135,8 +141,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String formula=et.getText().toString();
                 getPM(formula);
-                Log.i("tag 最终结果是：",result);
-                et.setText(String.valueOf(getResult(result)));
+                Log.i("tag 去除* /后算术式为是：",result);
+                et.setText(formatResult(getResult(result)));
             }
         });
         one_btn=(Button)findViewById(R.id.one_btn);
@@ -406,5 +412,24 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return result;
+    }
+    //对结果进行格式化，建议最好将数据类型float改成double
+    public String formatResult(float result){
+        float haha=result;
+        String finalResult;
+        Log.i("tag the haha is ",String.valueOf(haha));
+        if(String.valueOf(haha).contains(".")){
+            if(String.valueOf(haha).split("\\.")[1].length()>2){
+                DecimalFormat decimalFormat=new DecimalFormat(".0000");//对结果进行格式化
+                finalResult=decimalFormat.format(haha);
+            }else{
+                DecimalFormat decimalFormat=new DecimalFormat(".00");//对结果进行格式化
+                finalResult=decimalFormat.format(haha);
+            }
+        }else{
+            finalResult=String.valueOf(result);
+        }
+        Log.i("tag,格式化后的结果是：",finalResult);
+        return finalResult;
     }
 }
